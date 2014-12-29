@@ -6,9 +6,10 @@ target/
 *.jar
 *.war
 
-/error_hotspot.xml
+error_hotspot.xml
 hs_err_pid*
 
 final/
 
+.DS_Store
 *.lock
