@@ -2,6 +2,7 @@ package at.hackenbergerhollander.rueckwaertssalto.dbstructure;
 
 import at.hackenbergerhollander.rueckwaertssalto.dbstructure.attributeproperties.AttributeProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,16 +15,13 @@ public class Attribute {
     private Table parentTable;
 
     private String name;
-    private AttributeType attributeType;
-    private int length;
     private List<AttributeProperty> properties;
 
-    protected Attribute(Table parentTable, String name, AttributeType attributeType, int length) {
+    protected Attribute(Table parentTable, String name) {
         this.parentTable = parentTable;
 
         this.name = name;
-        this.attributeType = attributeType;
-        this.length = length;
+        this.properties = new ArrayList<AttributeProperty>();
     }
 
     /**
@@ -33,24 +31,6 @@ public class Attribute {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Gets the Type of the Attribute
-     *
-     * @return Type of the Attribute
-     */
-    public AttributeType getAttributeType() {
-        return attributeType;
-    }
-
-    /**
-     * Gets the length/size of the Attribute in the DBMS
-     *
-     * @return Length/Size of Attribute
-     */
-    public int getLength() {
-        return length;
     }
 
     /**
@@ -78,8 +58,6 @@ public class Attribute {
 
         Attribute attribute = (Attribute) o;
 
-        if (length != attribute.length) return false;
-        if (attributeType != attribute.attributeType) return false;
         if (name != null ? !name.equals(attribute.name) : attribute.name != null) return false;
         if (properties != null ? !properties.equals(attribute.properties) : attribute.properties != null) return false;
 
@@ -89,8 +67,6 @@ public class Attribute {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (attributeType != null ? attributeType.hashCode() : 0);
-        result = 31 * result + length;
         result = 31 * result + (properties != null ? properties.hashCode() : 0);
         return result;
     }
@@ -100,8 +76,6 @@ public class Attribute {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Attribute{");
         sb.append("name='").append(name).append('\'');
-        sb.append(", attributeType=").append(attributeType);
-        sb.append(", length=").append(length);
         sb.append(", properties=").append(properties);
         sb.append('}');
         return sb.toString();

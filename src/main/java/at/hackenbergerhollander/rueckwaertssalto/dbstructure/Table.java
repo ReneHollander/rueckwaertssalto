@@ -36,13 +36,11 @@ public class Table {
     /**
      * Add an Attribute to the Table
      *
-     * @param name          Name of the Attribute
-     * @param attributeType Type of the Attribute
-     * @param length        Length/Size of the Attribute
+     * @param name Name of the Attribute
      * @return Attribute added to the Table
      */
-    public Attribute addAttribute(String name, AttributeType attributeType, int length) {
-        Attribute attribute = new Attribute(this, name, attributeType, length);
+    public Attribute addAttribute(String name) {
+        Attribute attribute = new Attribute(this, name);
         this.attributes.add(attribute);
         return attribute;
     }
