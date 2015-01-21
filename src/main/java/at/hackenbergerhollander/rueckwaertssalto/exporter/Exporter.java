@@ -15,5 +15,5 @@ public interface Exporter {
      * @param db Database to export
      * @return true when export finishes successful, false when not
      */
-    public boolean export(Database db);
+    public boolean export(Database db) throws Exception;
 }
