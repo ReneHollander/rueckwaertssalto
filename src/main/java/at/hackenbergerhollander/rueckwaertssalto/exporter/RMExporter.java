@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.tutego.jrtf.RtfText.textJoinWithSpace;
 import static com.tutego.jrtf.RtfText.underline;
 
 /**
@@ -72,10 +73,10 @@ public class RMExporter implements Exporter {
                     texts.add(RtfText.text(", "));
                     texts.add(text);
                 }
-                lines.add(text);
             }
             texts.add(RtfText.text(")"));
-            lines.add(RtfText.text(texts.toArray(new RtfText[lines.size()])));
+            texts.add(RtfText.lineBreak());
+            lines.add(RtfText.text(texts.toArray(new RtfText[texts.size()])));
         }
         Rtf.rtf().section(RtfPara.p(lines.toArray(new RtfText[lines.size()]))).out(new FileWriter(this.outputFile));
         return true;

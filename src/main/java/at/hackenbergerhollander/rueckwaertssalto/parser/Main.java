@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://10.0.5.30/rueckwaertssalto", "root", "password");
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:test.db");
         JDBCConnectionParser jdbcConnectionParser = new JDBCConnectionParser(connection);
         Database db = jdbcConnectionParser.parse();
         RMExporter exporter = new RMExporter(new File("out.rtf"));
