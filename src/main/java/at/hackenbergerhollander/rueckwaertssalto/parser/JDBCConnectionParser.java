@@ -28,6 +28,7 @@ public class JDBCConnectionParser implements Parser {
      * Create a new JDBC Connection Parser from the connection
      *
      * @param connection Database to parse from
+     * @throws java.sql.SQLException If a connection error occurs
      */
     public JDBCConnectionParser(Connection connection) throws SQLException {
         this.connection = connection;
@@ -44,11 +45,11 @@ public class JDBCConnectionParser implements Parser {
 
             ResultSet columns = dbmd.getColumns(null, null, table.getName(), null);
             while (columns.next()) {
-                Attribute attribute = table.addAttribute(columns.getString(COLUMN_COLUMN_NAME));
+                table.addAttribute(columns.getString(COLUMN_COLUMN_NAME));
             }
         }
 
-        // Check primary key
+        // Find primary keys
         for (Table table : database.getTables()) {
             ResultSet primaryKeyRs = dbmd.getExportedKeys("", "", table.getName());
             while (primaryKeyRs.next()) {
@@ -57,24 +58,14 @@ public class JDBCConnectionParser implements Parser {
             }
         }
 
+        // Find foreign keys
         for (Table table : database.getTables()) {
             ResultSet foreignKeyRs = dbmd.getImportedKeys("", "", table.getName());
             while (foreignKeyRs.next()) {
-                for (int i = 1; i <= foreignKeyRs.getMetaData().getColumnCount(); i++) {
-                    System.out.println(foreignKeyRs.getMetaData().getColumnName(i) + ": " + foreignKeyRs.getString(i));
-                }
-                System.out.println();
-
-
+                String pktable = foreignKeyRs.getString("PKTABLE_NAME");
                 String pkey = foreignKeyRs.getString("PKCOLUMN_NAME");
-                String fktable = foreignKeyRs.getString("FKTABLE_NAME");
                 String fkcolumn = foreignKeyRs.getString("FKCOLUMN_NAME");
-                System.out.println(pkey);
-                System.out.println(fktable);
-                System.out.println(fkcolumn);
-                System.out.println(table.getAttribute(pkey));
-                table.getAttribute(pkey).getProperties().put(Attribute.PROPERTY_FOREIGN_KEY, new Foreign(database.getTable(fktable).getAttribute(fkcolumn)));
-
+                table.getAttribute(fkcolumn).getProperties().put(Attribute.PROPERTY_FOREIGN_KEY, new Foreign(database.getTable(pktable).getAttribute(pkey)));
             }
         }
 

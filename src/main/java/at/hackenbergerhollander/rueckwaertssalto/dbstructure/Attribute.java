@@ -11,7 +11,14 @@ import java.util.Map;
  */
 public class Attribute {
 
+    /**
+     * Key for the PrimaryKey Property
+     */
     public static final String PROPERTY_PRIMARY_KEY = "PRIMARY_KEY";
+
+    /**
+     * Key for the ForeignKey Property
+     */
     public static final String PROPERTY_FOREIGN_KEY = "FOREIGN_KEY";
 
     private Table parentTable;
