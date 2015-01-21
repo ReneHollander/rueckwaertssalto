@@ -3,10 +3,12 @@ package at.hackenbergerhollander.rueckwaertssalto.parser;
 import at.hackenbergerhollander.rueckwaertssalto.dbstructure.Attribute;
 import at.hackenbergerhollander.rueckwaertssalto.dbstructure.Database;
 import at.hackenbergerhollander.rueckwaertssalto.dbstructure.Table;
-import at.hackenbergerhollander.rueckwaertssalto.dbstructure.attributeproperties.Primary;
+import at.hackenbergerhollander.rueckwaertssalto.dbstructure.attributeproperties.Foreign;
 
-import javax.xml.crypto.Data;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Parse the JDBC Connection Metadata into a Database Object
@@ -33,7 +35,7 @@ public class JDBCConnectionParser implements Parser {
     }
 
     @Override
-    public Database parse() throws SQLException {
+    public Database parse() throws Exception {
         Database database = new Database("not yet set");
 
         ResultSet tables = dbmd.getTables(null, null, null, null);
@@ -42,27 +44,41 @@ public class JDBCConnectionParser implements Parser {
 
             ResultSet columns = dbmd.getColumns(null, null, table.getName(), null);
             while (columns.next()) {
-                for (int i = 1; i <= columns.getMetaData().getColumnCount(); i++) {
-                    //System.out.println(columns.getMetaData().getColumnName(i) + ": " + columns.getString(i));
-                }
                 Attribute attribute = table.addAttribute(columns.getString(COLUMN_COLUMN_NAME));
-                if (isPrimary(table, attribute)) {
-                    attribute.getProperties().add(new Primary());
+            }
+        }
+
+        // Check primary key
+        for (Table table : database.getTables()) {
+            ResultSet primaryKeyRs = dbmd.getExportedKeys("", "", table.getName());
+            while (primaryKeyRs.next()) {
+                String pkey = primaryKeyRs.getString("PKCOLUMN_NAME");
+                table.getAttribute(pkey).getProperties().put(Attribute.PROPERTY_PRIMARY_KEY, null);
+            }
+        }
+
+        for (Table table : database.getTables()) {
+            ResultSet foreignKeyRs = dbmd.getImportedKeys("", "", table.getName());
+            while (foreignKeyRs.next()) {
+                for (int i = 1; i <= foreignKeyRs.getMetaData().getColumnCount(); i++) {
+                    System.out.println(foreignKeyRs.getMetaData().getColumnName(i) + ": " + foreignKeyRs.getString(i));
                 }
+                System.out.println();
+
+
+                String pkey = foreignKeyRs.getString("PKCOLUMN_NAME");
+                String fktable = foreignKeyRs.getString("FKTABLE_NAME");
+                String fkcolumn = foreignKeyRs.getString("FKCOLUMN_NAME");
+                System.out.println(pkey);
+                System.out.println(fktable);
+                System.out.println(fkcolumn);
+                System.out.println(table.getAttribute(pkey));
+                table.getAttribute(pkey).getProperties().put(Attribute.PROPERTY_FOREIGN_KEY, new Foreign(database.getTable(fktable).getAttribute(fkcolumn)));
+
             }
         }
 
         return database;
     }
 
-    private boolean isPrimary(Table table, Attribute attribute) throws SQLException {
-        ResultSet rs = dbmd.getExportedKeys("", "", table.getName());
-        while (rs.next()) {
-            String pkey = rs.getString("PKCOLUMN_NAME");
-            if (pkey.equals(attribute.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -1,9 +1,7 @@
 package at.hackenbergerhollander.rueckwaertssalto.dbstructure;
 
-import at.hackenbergerhollander.rueckwaertssalto.dbstructure.attributeproperties.AttributeProperty;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents an Attribute in a Table of an DBMS
@@ -12,16 +10,20 @@ import java.util.List;
  * @version 1.0
  */
 public class Attribute {
+
+    public static final String PROPERTY_PRIMARY_KEY = "PRIMARY_KEY";
+    public static final String PROPERTY_FOREIGN_KEY = "FOREIGN_KEY";
+
     private Table parentTable;
 
     private String name;
-    private List<AttributeProperty> properties;
+    private Map<String, Object> properties;
 
     protected Attribute(Table parentTable, String name) {
         this.parentTable = parentTable;
 
         this.name = name;
-        this.properties = new ArrayList<AttributeProperty>();
+        this.properties = new HashMap<>();
     }
 
     /**
@@ -38,7 +40,7 @@ public class Attribute {
      *
      * @return List of the Properties of this Attribute
      */
-    public List<AttributeProperty> getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 
