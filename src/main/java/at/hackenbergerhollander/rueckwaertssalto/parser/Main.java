@@ -1,6 +1,8 @@
 package at.hackenbergerhollander.rueckwaertssalto.parser;
 
 import at.hackenbergerhollander.rueckwaertssalto.dbstructure.Database;
+import at.hackenbergerhollander.rueckwaertssalto.exporter.ERExporter;
+import at.hackenbergerhollander.rueckwaertssalto.exporter.Exporter;
 import at.hackenbergerhollander.rueckwaertssalto.exporter.RMExporter;
 
 import java.io.File;
@@ -12,7 +14,7 @@ public class Main {
         Connection connection = DriverManager.getConnection("jdbc:sqlite:test.db");
         JDBCConnectionParser jdbcConnectionParser = new JDBCConnectionParser(connection);
         Database db = jdbcConnectionParser.parse();
-        RMExporter exporter = new RMExporter(new File("out.rtf"));
+        Exporter exporter = new ERExporter(new File("out.gv"));
         exporter.export(db);
         System.out.println(db);
     }

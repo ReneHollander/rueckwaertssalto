@@ -64,6 +64,9 @@ public class RMExporter implements Exporter {
                     } else {
                         text = RtfText.underline(attribute.getName());
                     }
+                } else if (props.containsKey(Attribute.PROPERTY_FOREIGN_KEY)) {
+                    Foreign foreign = (Foreign) attribute.getProperties().get(Attribute.PROPERTY_FOREIGN_KEY);
+                    text = RtfText.dottedUnderline(attribute.getName() + ": " + foreign.getOrigin().getParentTable().getName() + "." + foreign.getOrigin().getName());
                 } else {
                     text = RtfText.text(attribute.getName());
                 }
