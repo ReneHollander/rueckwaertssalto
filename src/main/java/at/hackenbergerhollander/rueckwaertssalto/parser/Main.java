@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:test.db");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb", "root", "1234");
         JDBCConnectionParser jdbcConnectionParser = new JDBCConnectionParser(connection);
         Database db = jdbcConnectionParser.parse();
         Exporter exporter = new ERExporter(new File("out.gv"));

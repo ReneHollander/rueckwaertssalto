@@ -37,7 +37,7 @@ public class JDBCConnectionParser implements Parser {
 
     @Override
     public Database parse() throws Exception {
-        Database database = new Database("not yet set");
+        Database database = new Database(connection.getCatalog());
 
         ResultSet tables = dbmd.getTables(null, null, null, null);
         while (tables.next()) {
@@ -51,25 +51,32 @@ public class JDBCConnectionParser implements Parser {
 
         // Find primary keys
         for (Table table : database.getTables()) {
-            ResultSet primaryKeyRs = dbmd.getExportedKeys("", "", table.getName());
+            ResultSet primaryKeyRs = dbmd.getPrimaryKeys(connection.getCatalog(), null, table.getName());
             while (primaryKeyRs.next()) {
-                String pkey = primaryKeyRs.getString("PKCOLUMN_NAME");
+                String pkey = primaryKeyRs.getString("COLUMN_NAME");
                 table.getAttribute(pkey).getProperties().put(Attribute.PROPERTY_PRIMARY_KEY, null);
             }
         }
 
         // Find foreign keys
         for (Table table : database.getTables()) {
-            ResultSet foreignKeyRs = dbmd.getImportedKeys("", "", table.getName());
+            ResultSet foreignKeyRs = dbmd.getImportedKeys(connection.getCatalog(), null, table.getName());
             while (foreignKeyRs.next()) {
                 String pktable = foreignKeyRs.getString("PKTABLE_NAME");
                 String pkey = foreignKeyRs.getString("PKCOLUMN_NAME");
+                String fktable = foreignKeyRs.getString("FKTABLE_NAME");
                 String fkcolumn = foreignKeyRs.getString("FKCOLUMN_NAME");
                 table.getAttribute(fkcolumn).getProperties().put(Attribute.PROPERTY_FOREIGN_KEY, new Foreign(database.getTable(pktable).getAttribute(pkey)));
             }
         }
 
         return database;
+    }
+
+    public void dumpColumns(ResultSet rs) throws SQLException {
+        for (int i = 1; i < rs.getMetaData().getColumnCount(); i++) {
+            System.out.println("\t" + rs.getMetaData().getColumnName(i));
+        }
     }
 
 }
