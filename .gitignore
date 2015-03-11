@@ -13,3 +13,6 @@ final/
 
 .DS_Store
 *.lock
+out.gv
+output.dot
+dia.png
