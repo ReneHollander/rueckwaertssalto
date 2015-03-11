@@ -60,7 +60,9 @@ public class ERExporter implements Exporter {
                     continue;
                 }
                 if(props.containsKey(Attribute.PROPERTY_PRIMARY_KEY)) {
-                    dot.append("\""+db.getName()+"_"+table.getName()+"_"+attribute.getName() + "\" [label=<<u>"+attribute.getName()+"</u>>];");
+                    dot.append("\"" + db.getName() + "_" + table.getName() + "_" + attribute.getName() + "\" [label=<<u>" + attribute.getName() + "</u>>];");
+                }else if(props.containsKey(Attribute.PROPERTY_UNIQUE) || props.containsKey(Attribute.PROPERTY_NOT_NULL)) {
+                    dot.append("\""+db.getName()+"_"+table.getName()+"_"+attribute.getName() + "\" [label=\""+attribute.getName()+ (props.containsKey(Attribute.PROPERTY_UNIQUE) ? " <Unique>" : "") + (props.containsKey(Attribute.PROPERTY_NOT_NULL) ? " <Not Null>" : "") +"\"];");
                 }else {
                     dot.append("\""+db.getName()+"_"+table.getName()+"_"+attribute.getName() + "\" [label="+attribute.getName()+"];");
                 }
