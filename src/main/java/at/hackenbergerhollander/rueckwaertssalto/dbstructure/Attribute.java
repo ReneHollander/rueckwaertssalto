@@ -17,6 +17,16 @@ public class Attribute {
     public static final String PROPERTY_PRIMARY_KEY = "PRIMARY_KEY";
 
     /**
+     * Key for the Unique Property
+     */
+    public static final String PROPERTY_UNIQUE = "UNIQUE";
+
+    /**
+     * Key for the Not Null Property
+     */
+    public static final String PROPERTY_NOT_NULL = "NOT_NULL";
+
+    /**
      * Key for the ForeignKey Property
      */
     public static final String PROPERTY_FOREIGN_KEY = "FOREIGN_KEY";
