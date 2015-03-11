@@ -92,6 +92,8 @@ public class JDBCConnectionParser implements Parser {
         for (Table table : database.getTables()) {
             ResultSet foreignKeyRs = dbmd.getImportedKeys(connection.getCatalog(), null, table.getName());
             while (foreignKeyRs.next()) {
+                if(foreignKeyRs.getShort("KEY_SEQ") > 1)
+                    continue;
                 String pktable = foreignKeyRs.getString("PKTABLE_NAME");
                 String pkey = foreignKeyRs.getString("PKCOLUMN_NAME");
                 String fktable = foreignKeyRs.getString("FKTABLE_NAME");

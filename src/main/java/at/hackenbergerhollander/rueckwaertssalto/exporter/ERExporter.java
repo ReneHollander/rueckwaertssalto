@@ -51,12 +51,12 @@ public class ERExporter implements Exporter {
                             " [shape=diamond,label=\""+attribute.getName()+"/"+foreign.getOrigin().getName()+"\"];");
                     if (props.containsKey(Attribute.PROPERTY_PRIMARY_KEY)) {
                         dot.append("\""+db.getName()+"_"+table.getName()+"\" [peripheries=2];");
-                        dot.append("\""+db.getName()+"_"+table.getName()+"\"" + " -> " + relation + " [dir=none,color=\"black:white:black\"];");
+                        dot.append("\""+db.getName()+"_"+table.getName()+"\"" + " -> " + relation + " [dir=none,color=\"black:white:black\",label=\"" + (props.containsKey(Attribute.PROPERTY_UNIQUE) ? "1" : "n") + "\"];");
                         dot.append(relation + " [peripheries=2];");
                     }else {
-                        dot.append("\""+db.getName()+"_"+table.getName()+"\"" + " -> " + relation  + " [dir=none];");
+                        dot.append("\""+db.getName()+"_"+table.getName()+"\"" + " -> " + relation  + " [dir=none,label=\"" + (props.containsKey(Attribute.PROPERTY_UNIQUE) ? "1" : "n") + "\"];");
                     }
-                    dot.append(relation + " -> " + "\""+db.getName()+"_"+foreign.getOrigin().getParentTable().getName() + "\" [dir=none];");
+                    dot.append(relation + " -> " + "\""+db.getName()+"_"+foreign.getOrigin().getParentTable().getName() + "\" [dir=none,label=\"1\"];");
                     continue;
                 }
                 if(props.containsKey(Attribute.PROPERTY_PRIMARY_KEY)) {
