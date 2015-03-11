@@ -13,3 +13,5 @@ final/
 
 .DS_Store
 *.lock
+*.pdf
+dependency-reduced-pom.xml
