@@ -13,11 +13,8 @@ final/
 
 .DS_Store
 *.lock
-<<<<<<< HEAD
-*.pdf
-dependency-reduced-pom.xml
-=======
 out.gv
 output.dot
 dia.png
->>>>>>> origin/master
+*.pdf
+dependency-reduced-pom.xml
