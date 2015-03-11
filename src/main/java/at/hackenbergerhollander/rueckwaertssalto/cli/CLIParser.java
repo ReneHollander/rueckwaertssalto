@@ -1,6 +1,7 @@
 package at.hackenbergerhollander.rueckwaertssalto.cli;
 
 import at.hackenbergerhollander.rueckwaertssalto.error.InvalidOptionException;
+import java.io.File;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -15,20 +16,24 @@ import java.io.ByteArrayOutputStream;
  */
 public class CLIParser {
 
-    @Option(name = "-h", usage = "the hostname of the database", required = true)
+    @Option(name = "-h", usage = "hostname of the dbms (Only MySQL supported)", required = true)
     private String hostname;
 
-    @Option(name = "-u", usage = "the username to login the database", required = true)
+    @Option(name = "-u", usage = "username for the dbms", required = true)
     private String username;
 
-    @Option(name = "-p", usage = "the password to login the database", required = true)
+    @Option(name = "-p", usage = "password for the dbms", required = true)
     private String password;
 
-    @Option(name = "-d", usage = "the database name", required = true)
+    @Option(name = "-d", usage = "database name", required = true)
     private String dbname;
 
-    @Option(name = "-t", usage = "the type of export (ER or RM)", required = true)
+    @Option(name = "-t", usage = "type of export file\n\t-ER: Chen ER diagramm in form of a dot file\n\t-RM: Relationemodell in form of a RTF File", required = true)
     private String exporttype;
+
+    @Option(name = "-o", usage = "filename of the file to write the output to", required = true)
+    private File outputfile;
+
 
     /**
      * This method starts the parsing of the options and arguments
@@ -45,8 +50,7 @@ public class CLIParser {
         } catch (CmdLineException ex) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             parser.printUsage(out);
-            throw new InvalidOptionException(ex.getMessage() + '\n' +
-                    usage + '\n' + out.toString());
+            throw new InvalidOptionException(ex.getMessage() + '\n' + usage + '\n' + out.toString());
         }
     }
 
@@ -68,5 +72,9 @@ public class CLIParser {
 
     public String getExportType() {
         return exporttype;
+    }
+
+    public File getOutputFile() {
+        return outputfile;
     }
 }
