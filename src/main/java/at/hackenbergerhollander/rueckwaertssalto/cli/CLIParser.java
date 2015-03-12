@@ -34,6 +34,9 @@ public class CLIParser {
     @Option(name = "-o", usage = "filename of the file to write the output to", required = true)
     private File outputfile;
 
+    @Option(name="--help",help=true,usage="show the help menu")
+    private boolean help;
+
 
     /**
      * This method starts the parsing of the options and arguments
@@ -47,6 +50,8 @@ public class CLIParser {
 
         try {
             parser.parseArgument(args);
+            if(this.help)
+                throw new CmdLineException(parser, "", null);
         } catch (CmdLineException ex) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             parser.printUsage(out);
